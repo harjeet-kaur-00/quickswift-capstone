@@ -1,0 +1,199 @@
+type Vehicle {
+    make: String!
+    model: String!
+    year: Int!
+    licensePlate: String!
+    insuranceProof: String!
+}
+
+type Location {
+    address: String!
+    city: String!
+    postalcode: String!
+}
+
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    userId: String!
+    userType: String!
+    status:String!
+    profilePicture: String  
+    phoneNumber: String      
+    driverInfo: DriverInfo
+    businessInfo: BusinessInfo
+}
+
+type AuthPayload {
+    token: String!
+    userId: ID!
+    userType: String!  
+}
+
+type DriverInfo {
+    id:ID!
+    driverLicense: String!
+    vehicle: Vehicle
+}
+
+# Business info type
+type BusinessInfo {
+    id: ID!
+    businessLicense: String!
+    businessType: String!
+    businessLocation: Location
+    businessName: String!
+    businessLogo: String
+    bannerImage: String
+    openingHours: [OpeningHour]
+}
+type UserAll {
+  id: ID!
+  userId: String!
+  username: String!
+  email: String!
+  userType: String
+  status: String
+  driverInfo: DriverInfo
+  businessInfo: BusinessInfo
+}
+
+type MenuItem {
+    id: ID!
+    itemId: String!
+    name: String!
+    description: String
+    category: String!
+    subcategory: String
+    price: Float!
+    quantity: Int
+    stockStatus: Boolean!
+    unitOfMeasurement: String
+    allergenInformation: String
+    imageItem: String
+    businessId: ID!
+    featured: Boolean
+    discount: Float
+    adminApprovalStatus: Boolean
+    businessType: String
+}
+
+type OpeningHour {
+    day: String!
+    openTime: String!
+    closeTime: String!
+}
+
+
+input VehicleInput {
+    make: String!
+    model: String!
+    year: Int!
+    licensePlate: String!
+    insuranceProof: String!
+}
+
+input LocationInput {
+    address: String!
+    city: String!
+    postalcode: String!
+}
+
+input MenuItemInput {
+   id: Int
+    itemId: String
+    name: String
+    description: String
+    price: Float
+    quantity: Int
+    category: String
+    unitOfMeasurement: String
+    allergenInformation: String
+    stockStatus: Boolean         
+    imageItem: String            
+    businessId: String           
+    featured: Boolean             
+    discount: Float              
+    subcategory: String  
+}
+
+
+
+input OpeningHourInput {
+    day: String!
+    openTime: String!
+    closeTime: String!
+}
+
+type DeleteResponse {
+    success: Boolean!
+    message: String!
+}
+
+type UpdateMenuItemResponse {
+    success: Boolean!
+    message: String!
+    menuItem: MenuItem
+}
+
+ type PaymentIntent {
+        id: String!
+        clientSecret: String!
+        status: String
+}
+
+type Query {
+        getUser(id: ID!, userType: String!): User
+        getAllUsers: [UserAll!]!     
+        getMenuItems(businessId: ID!): [MenuItem]  
+        getMenuItemsList: [MenuItem] 
+}
+
+type Mutation {
+register(
+        username: String!,
+        email: String!,
+        password: String!,
+        userType: String!,
+        phoneNumber: String,
+        profilePicture: String,
+        driverLicense: String,
+        vehicle: VehicleInput,
+        businessLicense: String,
+        businessType: String,
+        businessName: String,
+        businessLogo: String,
+        bannerImage: String,
+        businessLocation: LocationInput,
+        openingHours: [OpeningHourInput]
+    ): User
+    login(email: String!, password: String!, userType: String!): AuthPayload 
+    approveUser(id: ID!): User
+    rejectUser(id: ID!): User
+   addMenuItem(
+        name: String!,
+        description: String,
+        price: Float!,
+        quantity: Int,
+        stockStatus: Boolean!,
+        imageItem: String,
+        unitOfMeasurement: String,
+        allergenInformation: String,
+        category: String!,
+        subcategory: String,
+        businessId: ID!,
+        featured: Boolean,
+        discount: Float
+    ): MenuItem
+
+    deleteMenuItem(itemId: String!): DeleteResponse!
+    updateMenuItem(id: ID!, input: MenuItemInput!): MenuItem
+    createPaymentIntent(description: String!, amount: Float!): PaymentIntent
+    capturePayment(orderId: String!): PaymentIntent
+    forgotPassword(email: String!): Boolean
+    resetPassword(userId: ID!,token: String!, newPassword: String!): Boolean
+    updateAdminApprovalStatus(id: ID!, adminApprovalStatus: Boolean!): MenuItem
+
+}
